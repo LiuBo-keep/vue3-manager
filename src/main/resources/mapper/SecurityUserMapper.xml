@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.vue3manager.dao.mapper.SecurityUserMapper">
+
+    <insert id="insert" parameterType="SecurityUser">
+        INSERT INTO security_user(id, name, password, phone, email, create_time, create_by, update_time, update_by)
+        VALUES (#{securityUser.id}, #{securityUser.name}, #{securityUser.password}, #{securityUser.phone},
+                #{securityUser.email}, #{securityUser.createTime}, #{securityUser.createBy}, #{securityUser.updateTime},
+                #{securityUser.updateBy})
+    </insert>
+</mapper>
