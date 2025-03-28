@@ -1,10 +1,13 @@
 package org.example.vue3manager.common.response;
 
+import lombok.Getter;
+
 /**
  * ResponseCode枚举类定义了可能的响应状态码，每个状态码都有一个对应的整数值和描述信息
  *
  * @author aidan.liu
  */
+@Getter
 public enum ResponseCode {
   /**
    * 请求成功
@@ -48,13 +51,5 @@ public enum ResponseCode {
   ResponseCode(int code, String description) {
     this.code = code;
     this.description = description;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public String getDescription() {
-    return description;
   }
 }

@@ -1,12 +1,15 @@
 package org.example.vue3manager.common.response;
 
 
+import lombok.Data;
+
 /**
  * Response 类用于封装返回给客户端的响应信息。
  * 它提供响应状态代码、消息和数据等基本信息。
  *
  * @author aidan.liu
  */
+@Data
 public class Response {
 
   /**
@@ -48,29 +51,5 @@ public class Response {
     responseBuilder.setCode(ResponseCode.BAD_REQUEST);
     responseBuilder.setMsg(ResponseCode.BAD_REQUEST.getDescription());
     return responseBuilder;
-  }
-
-  public ResponseCode getCode() {
-    return code;
-  }
-
-  public void setCode(ResponseCode code) {
-    this.code = code;
-  }
-
-  public String getMsg() {
-    return msg;
-  }
-
-  public void setMsg(String msg) {
-    this.msg = msg;
-  }
-
-  public Object getData() {
-    return data;
-  }
-
-  public void setData(Object data) {
-    this.data = data;
   }
 }

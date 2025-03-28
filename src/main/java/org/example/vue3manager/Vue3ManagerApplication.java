@@ -11,5 +11,4 @@ public class Vue3ManagerApplication {
   public static void main(String[] args) {
     SpringApplication.run(Vue3ManagerApplication.class, args);
   }
-
 }

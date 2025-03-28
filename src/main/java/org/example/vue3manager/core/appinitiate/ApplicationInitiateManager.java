@@ -1,7 +1,6 @@
 package org.example.vue3manager.core.appinitiate;
 
 import java.util.Map;
-import java.util.Set;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
@@ -19,7 +18,7 @@ public class ApplicationInitiateManager implements ApplicationRunner, Applicatio
 
     Map<String, SystemInit> beansOfType = applicationContext.getBeansOfType(SystemInit.class);
     if (MapUtils.isNotEmpty(beansOfType)) {
-
+      beansOfType.forEach((k, v) -> v.init());
     }
   }
 

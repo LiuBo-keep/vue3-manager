@@ -1,6 +1,7 @@
 package org.example.vue3manager.core.appinitiate;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.example.vue3manager.dao.SecurityUserDao;
@@ -19,12 +20,19 @@ public class SystemAdminInti implements SystemInit {
 
   @Override
   public void init() {
-    SecurityUser securityUser = new SecurityUser();
+    String ADMIN_NAME = "admin";
+    String ADMIN_PASSWORD = "admin";
+
+    SecurityUser securityUser = securityUserDao.findByName(ADMIN_NAME);
+    if (Objects.nonNull(securityUser)) {
+      return;
+    }
+    securityUser = new SecurityUser();
     securityUser.setId(UUID.randomUUID().toString());
-    securityUser.setName("admin");
-    securityUser.setPassword("admin");
+    securityUser.setName(ADMIN_NAME);
+    securityUser.setPassword(ADMIN_PASSWORD);
     securityUser.setCreateBy("system");
-    securityUser.setCreateTime(LocalDateTime.now().toString());
+    securityUser.setCreateTime(LocalDateTime.now());
     SecurityUser admin = securityUserDao.insert(securityUser);
 
     log.info("init admin user: {},passwords: {}", admin.getName(), admin.getPassword());

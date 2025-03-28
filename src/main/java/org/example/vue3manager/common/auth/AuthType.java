@@ -1,11 +1,14 @@
 package org.example.vue3manager.common.auth;
 
 
+import lombok.Getter;
+
 /**
  * 认证类型，例如Bearer或Basic等.
  *
  * @author aidan.liu
  */
+@Getter
 public enum AuthType {
 
   BEARER("Bearer"),
@@ -16,9 +19,5 @@ public enum AuthType {
 
   AuthType(String type) {
     this.type = type;
-  }
-
-  public String getType() {
-    return type;
   }
 }
