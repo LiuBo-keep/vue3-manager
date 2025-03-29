@@ -21,9 +21,9 @@ public interface SecurityKeyMapper {
    *
    * @param securityKey 要插入的安全密钥对象，包含密钥对的所有必要信息
    */
-  @Insert("insert into security_key(id,public_key, private_key, create_time, createby, update_time, updateby) "
-      + "values(#{securityKey.id},#{securityKey.publicKey}, #{securityKey.privateKey}, #{securityKey.createTime},"
-      + " #{securityKey.createBy},  #{securityKey.updateTime}, #{securityKey.updateBy})")
+  @Insert("insert into security_key(id,public_key, private_key, aes_key,create_time, createby, update_time, updateby) "
+          + "values(#{securityKey.id},#{securityKey.publicKey}, #{securityKey.privateKey}, #{securityKey.aesKey},"
+          + "#{securityKey.createTime}, #{securityKey.createBy},  #{securityKey.updateTime}, #{securityKey.updateBy})")
   void insert(@Param("securityKey") SecurityKey securityKey);
 
   /**
@@ -56,5 +56,8 @@ public interface SecurityKeyMapper {
    */
   @Select("select private_key from security_key")
   String findPrivateKey();
+
+  @Select("select aes_key from security_key")
+  String findAesKey();
 }
 

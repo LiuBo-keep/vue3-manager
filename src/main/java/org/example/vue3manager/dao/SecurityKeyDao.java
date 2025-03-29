@@ -71,5 +71,9 @@ public class SecurityKeyDao {
   public String findPrivateKey() {
     return securityKeyMapper.findPrivateKey();
   }
+
+  public String findAesKey() {
+    return securityKeyMapper.findAesKey();
+  }
 }
 

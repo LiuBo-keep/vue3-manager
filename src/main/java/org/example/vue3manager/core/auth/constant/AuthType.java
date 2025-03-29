@@ -1,4 +1,4 @@
-package org.example.vue3manager.common.auth;
+package org.example.vue3manager.core.auth.constant;
 
 
 import lombok.Getter;

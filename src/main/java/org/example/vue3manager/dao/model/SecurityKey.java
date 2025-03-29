@@ -30,6 +30,11 @@ public class SecurityKey {
   private String privateKey;
 
   /**
+   * ase密钥
+   */
+  private String aesKey;
+
+  /**
    * 创建时间，记录密钥对何时被创建
    */
   private LocalDateTime createTime;

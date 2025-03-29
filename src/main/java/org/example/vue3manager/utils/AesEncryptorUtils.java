@@ -1,107 +1,141 @@
 package org.example.vue3manager.utils;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+
 
 /**
- * AES加解密工具类
+ * AES 加密和解密工具类，使用 GCM 模式（Galois/Counter Mode）
+ * 提供加密、解密以及生成安全 AES 密钥的功能
  *
  * @author aidan.liu
  */
 @Slf4j
 public class AesEncryptorUtils {
-  // 加密密钥，使用UUID以确保唯一性和安全性
-  private static final String PASSWORD = "e5195386-ea3b-4c91-b735-a3324b76d861";
-  // 密钥算法名称
-  private static final String KEY_ALGORITHM = "AES";
-  // 默认的加密算法名称，使用ECB模式和PKCS5Padding填充方式
-  private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
+    private static final String AES_ALGORITHM = "AES";
+    private static final String CIPHER_ALGORITHM = "AES/GCM/NoPadding";
+    private static final int GCM_IV_LENGTH = 12;
+    private static final int GCM_TAG_LENGTH = 16;
 
-  /**
-   * AES 加密操作.
-   *
-   * @param content 待加密的内容
-   * @return 加密后的字符串，如果加密失败返回null
-   */
-  public static String encrypt(String content) {
+    // 从安全配置获取，不要硬编码在代码中
+    private final byte[] aesKey;
 
-    if (StringUtils.isBlank(content)) {
-      return null;
-    }
-    try {
-      // 创建密码器
-      Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
-      byte[] byteContent = content.getBytes(UTF_8);
-      // 初始化为加密模式的密码器
-      cipher.init(Cipher.ENCRYPT_MODE, getSecretKey());
-      // 加密
-      byte[] result = cipher.doFinal(byteContent);
-      return Base64.getEncoder().encodeToString(result);
-    } catch (Exception ex) {
-      log.error("encrypt error", ex);
+    /**
+     * 构造函数，初始化 AES 密钥
+     *
+     * @param aesKey 256 位（32 字节）的 AES 密钥
+     * @throws IllegalArgumentException 如果提供的密钥为空或长度不等于 32 字节
+     */
+    public AesEncryptorUtils(byte[] aesKey) {
+        if (aesKey == null || aesKey.length != 32) {
+            throw new IllegalArgumentException("AES key must be 256 bits (32 bytes)");
+        }
+        this.aesKey = aesKey.clone();
     }
 
-    return null;
-  }
+    /**
+     * 使用 AES 密钥加密字符串
+     *
+     * @param plaintext 要加密的明文字符串
+     * @return 加密后的 Base64 编码的密文字符串
+     * @throws SecurityException 如果加密失败
+     */
+    public String encrypt(String plaintext) {
+        if (plaintext == null || plaintext.isEmpty()) {
+            return null;
+        }
 
-  /**
-   * AES 解密操作.
-   *
-   * @param content 待解密的内容
-   * @return 解密后的字符串，如果解密失败返回null
-   */
-  public static String decrypt(String content) {
+        try {
+            // 生成随机IV
+            byte[] iv = new byte[GCM_IV_LENGTH];
+            SecureRandom random = new SecureRandom();
+            random.nextBytes(iv);
 
-    if (StringUtils.isBlank(content)) {
-      return null;
+            // 初始化GCM参数
+            GCMParameterSpec ivSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
+
+            // 初始化密码器
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+            SecretKeySpec keySpec = new SecretKeySpec(aesKey, AES_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+
+            // 加密数据
+            byte[] ciphertext = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
+
+            // 组合IV和密文
+            byte[] encrypted = new byte[iv.length + ciphertext.length];
+            System.arraycopy(iv, 0, encrypted, 0, iv.length);
+            System.arraycopy(ciphertext, 0, encrypted, iv.length, ciphertext.length);
+
+            return Base64.getEncoder().encodeToString(encrypted);
+        } catch (Exception e) {
+            throw new SecurityException("AES encryption failed", e);
+        }
     }
-    try {
-      // 实例化
-      Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
-      // 使用密钥初始化，设置为解密模式
-      cipher.init(Cipher.DECRYPT_MODE, getSecretKey());
-      // 执行操作
-      byte[] result = cipher.doFinal(Base64.getDecoder().decode(content));
 
-      return new String(result, UTF_8);
-    } catch (Exception ex) {
-      log.error("decrypt error", ex);
+    /**
+     * 使用 AES 密钥解密 Base64 编码的密文字符串
+     *
+     * @param encryptedText Base64 编码的密文字符串
+     * @return 解密后的明文字符串
+     * @throws SecurityException 如果解密失败
+     */
+    public String decrypt(String encryptedText) {
+        if (encryptedText == null || encryptedText.isEmpty()) {
+            return null;
+        }
+
+        try {
+            // 解码Base64
+            byte[] decoded = Base64.getDecoder().decode(encryptedText);
+
+            // 提取IV
+            byte[] iv = new byte[GCM_IV_LENGTH];
+            System.arraycopy(decoded, 0, iv, 0, iv.length);
+
+            // 提取密文
+            byte[] ciphertext = new byte[decoded.length - GCM_IV_LENGTH];
+            System.arraycopy(decoded, iv.length, ciphertext, 0, ciphertext.length);
+
+            // 初始化GCM参数
+            GCMParameterSpec ivSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
+
+            // 初始化密码器
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+            SecretKeySpec keySpec = new SecretKeySpec(aesKey, AES_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+
+            // 解密数据
+            byte[] plaintext = cipher.doFinal(ciphertext);
+
+            return new String(plaintext, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new SecurityException("AES decryption failed", e);
+        }
     }
-    return null;
-  }
 
-  /**
-   * 生成加密秘钥.
-   *
-   * @return 生成的密钥，如果生成失败返回null
-   */
-  private static SecretKeySpec getSecretKey() {
-
-    // 返回生成指定算法密钥生成器的 KeyGenerator 对象
-    KeyGenerator kg;
-    try {
-      kg = KeyGenerator.getInstance(KEY_ALGORITHM);
-      SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-      random.setSeed(PASSWORD.getBytes(UTF_8));
-      // AES 要求密钥长度为 128
-      final int aesKeyLength = 128;
-      kg.init(aesKeyLength, random);
-      // 生成一个密钥
-      SecretKey secretKey = kg.generateKey();
-      // 转换为AES专用密钥
-      return new SecretKeySpec(secretKey.getEncoded(), KEY_ALGORITHM);
-    } catch (NoSuchAlgorithmException ex) {
-      log.error("getSecretKey error", ex);
+    /**
+     * 生成一个安全的 256 位 AES 密钥
+     *
+     * @return 256 位 AES 密钥的字节数组
+     * @throws SecurityException 如果生成密钥失败
+     */
+    public static byte[] generateSecureAesKey() {
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance(AES_ALGORITHM);
+            keyGen.init(256); // 使用256位AES密钥
+            return keyGen.generateKey().getEncoded();
+        } catch (NoSuchAlgorithmException e) {
+            throw new SecurityException("Failed to generate AES key", e);
+        }
     }
-    return null;
-  }
 }
