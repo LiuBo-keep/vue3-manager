@@ -76,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         JwtToken jwtToken = jwtTokenManager.parseToken(authRequest.getRefresh_token());
-        String userName = (String) jwtToken.getPayload().get("sub");
+        String userName = jwtToken.getSubject();
         if (userName == null) {
             logger.info("无效的刷新令牌");
             throw new AuthException("无效的刷新令牌!");

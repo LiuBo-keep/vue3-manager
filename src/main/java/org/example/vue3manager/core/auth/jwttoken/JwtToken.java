@@ -19,14 +19,14 @@ public class JwtToken {
      */
     private String token;
 
-    /**
-     * JWT 中的主题（subject），通常表示用户标识
-     */
-    private String subject;
-
     private Map<String, Object> header;
 
     private Map<String, Object> payload;
 
     private String signature;
+
+
+    public String getSubject() {
+        return payload.get("sub").toString();
+    }
 }

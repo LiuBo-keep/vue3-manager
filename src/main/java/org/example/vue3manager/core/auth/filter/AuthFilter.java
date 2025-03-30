@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.vue3manager.common.exception.AuthException;
 import org.example.vue3manager.core.auth.constant.AuthFlag;
 import org.example.vue3manager.core.auth.constant.AuthType;
+import org.example.vue3manager.core.auth.context.SecurityIdentity;
+import org.example.vue3manager.core.auth.jwttoken.JwtToken;
 import org.example.vue3manager.core.auth.jwttoken.JwtTokenManager;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,10 +14,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthFilter implements HandlerInterceptor {
 
-    private JwtTokenManager jwtTokenManager;
+    private final JwtTokenManager jwtTokenManager;
+    private final SecurityIdentity securityIdentity;
 
-    public AuthFilter(JwtTokenManager jwtTokenManager) {
+    public AuthFilter(JwtTokenManager jwtTokenManager, SecurityIdentity securityIdentity) {
         this.jwtTokenManager = jwtTokenManager;
+        this.securityIdentity = securityIdentity;
     }
 
     @Override
@@ -27,11 +31,12 @@ public class AuthFilter implements HandlerInterceptor {
         }
 
         String token = authHeader.substring(7); // The part after "Bearer "
-        if (jwtTokenManager.validateToken(token)) {
+        if (!jwtTokenManager.validateToken(token)) {
             throw new AuthException("Invalid token");
         }
 
-        // Token is valid, proceed with the request
+        JwtToken jwtToken = jwtTokenManager.parseToken(token);
+        securityIdentity.setUsername(jwtToken.getSubject());
         return true;
     }
 }
