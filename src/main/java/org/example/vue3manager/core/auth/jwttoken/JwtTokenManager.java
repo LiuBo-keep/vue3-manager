@@ -1,17 +1,22 @@
 package org.example.vue3manager.core.auth.jwttoken;
 
 
-import io.jsonwebtoken.Claims;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.example.vue3manager.core.auth.constant.AuthFlag;
 import org.example.vue3manager.dao.SecurityKeyDao;
 import org.example.vue3manager.utils.AesEncryptorUtils;
 import org.example.vue3manager.utils.RSAKeyUtil;
@@ -31,15 +36,8 @@ public class JwtTokenManager {
      * 令牌的发行者，通常是应用的名称
      */
     private static final String ISSUER = "your-app-name";
-    /**
-     * 访问令牌的过期时间，单位为秒（1小时）
-     */
-    private static final long ACCESS_TOKEN_EXPIRATION = 3600;
-    /**
-     * 刷新令牌的过期时间，单位为秒（7天）
-     */
-    private static final long REFRESH_TOKEN_EXPIRATION = 86400 * 7;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
     /**
      * 用于访问数据库中的安全密钥的 DAO
      */
@@ -63,7 +61,7 @@ public class JwtTokenManager {
      * @return 生成的访问令牌字符串
      */
     public String generateAccessToken(String subject) {
-        return buildToken(subject, ACCESS_TOKEN_EXPIRATION);
+        return buildToken(subject, AuthFlag.ACCESS_TOKEN_EXPIRATION);
     }
 
     /**
@@ -73,7 +71,7 @@ public class JwtTokenManager {
      * @return 生成的刷新令牌字符串
      */
     public String generateRefreshToken(String subject) {
-        return buildToken(subject, REFRESH_TOKEN_EXPIRATION);
+        return buildToken(subject, AuthFlag.REFRESH_TOKEN_EXPIRATION);
     }
 
     /**
@@ -145,13 +143,41 @@ public class JwtTokenManager {
         return RSAKeyUtil.decodePublicKey(publicKeyStr);
     }
 
-    /**
-     * 将 LocalDateTime 转换为 Date
-     *
-     * @param localDateTime 需要转换的 LocalDateTime 对象
-     * @return 转换后的 Date 对象
-     */
-    private Date toDate(LocalDateTime localDateTime) {
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+    public JwtToken parseToken(String token) {
+        JwtToken jwtToken = new JwtToken();
+        jwtToken.setToken(token);
+        jwtToken.setSignature(parseTokenSignature(token));
+        jwtToken.setHeader(parseTokenHeader(token));
+        jwtToken.setPayload(parseTokenPayload(token));
+        return jwtToken;
+    }
+
+    private Map<String, Object> parseTokenHeader(String token) {
+
+        try {
+            byte[] bytes = Base64.getUrlDecoder().decode(StringUtils.split(token, ".")[0]);
+            String payload = new String(bytes, StandardCharsets.UTF_8);
+            return objectMapper.readValue(payload, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (JsonProcessingException e) {
+            return new HashMap<>(0);
+        }
+    }
+
+    private Map<String, Object> parseTokenPayload(String token) {
+
+        try {
+            byte[] bytes = Base64.getUrlDecoder().decode(StringUtils.split(token, ".")[1]);
+            String payload = new String(bytes, StandardCharsets.UTF_8);
+            return objectMapper.readValue(payload, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (JsonProcessingException e) {
+            return new HashMap<>(0);
+        }
+    }
+
+    private String parseTokenSignature(String token) {
+        return StringUtils.split(token, ".")[2];
     }
 }

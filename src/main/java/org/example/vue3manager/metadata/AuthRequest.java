@@ -10,13 +10,20 @@ import lombok.Data;
 @Data
 public class AuthRequest {
 
-  /**
-   * 用户名，用于身份验证。
-   */
-  private String name;
+    /**
+     * password or refresh_token or CLIENT_CREDENTIALS
+     */
+    private String grant_type;
 
-  /**
-   * 密码，用于身份验证。
-   */
-  private String password;
+    /**
+     * 用户名，用于身份验证。
+     */
+    private String name;
+
+    /**
+     * 密码，用于身份验证。
+     */
+    private String password;
+
+    private String refresh_token;
 }

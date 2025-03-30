@@ -16,18 +16,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthResponse {
 
-  /**
-   * 认证类型，例如Bearer或Basic等
-   */
-  private String type;
+    /**
+     * 认证类型，例如Bearer或Basic等
+     */
+    private String type;
 
-  /**
-   * 认证令牌，用于访问受保护的资源
-   */
-  private String token;
+    /**
+     * 认证令牌，用于访问受保护的资源
+     */
+    private String token;
 
-  /**
-   * 令牌过期时间，通常以时间戳的形式表示
-   */
-  private String expire;
+    /**
+     * 令牌过期时间，通常以时间戳的形式表示
+     */
+    private long expires_in;
+
+    /**
+     * Token刷新凭证。用于在token过期时，进行刷新。也可以通过重新获取 Token 处理
+     */
+    private String refresh_token;
+
+    /**
+     * Token刷新凭证有效期
+     */
+    private long refresh_expires_in;
 }
