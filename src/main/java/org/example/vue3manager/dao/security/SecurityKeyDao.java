@@ -1,7 +1,7 @@
-package org.example.vue3manager.dao;
+package org.example.vue3manager.dao.security;
 
-import org.example.vue3manager.dao.mapper.SecurityKeyMapper;
-import org.example.vue3manager.dao.model.SecurityKey;
+import org.example.vue3manager.dao.security.mapper.SecurityKeyMapper;
+import org.example.vue3manager.dao.security.model.SecurityKey;
 import org.springframework.stereotype.Repository;
 
 /**

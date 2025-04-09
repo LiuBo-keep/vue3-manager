@@ -1,4 +1,4 @@
-package org.example.vue3manager.dao.model;
+package org.example.vue3manager.dao.security.model;
 
 import java.time.LocalDateTime;
 import lombok.Data;

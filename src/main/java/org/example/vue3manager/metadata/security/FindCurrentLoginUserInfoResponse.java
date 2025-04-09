@@ -1,4 +1,4 @@
-package org.example.vue3manager.metadata;
+package org.example.vue3manager.metadata.security;
 
 import lombok.Data;
 

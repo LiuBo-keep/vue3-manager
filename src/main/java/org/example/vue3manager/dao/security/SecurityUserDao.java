@@ -1,7 +1,7 @@
-package org.example.vue3manager.dao;
+package org.example.vue3manager.dao.security;
 
-import org.example.vue3manager.dao.mapper.SecurityUserMapper;
-import org.example.vue3manager.dao.model.SecurityUser;
+import org.example.vue3manager.dao.security.mapper.SecurityUserMapper;
+import org.example.vue3manager.dao.security.model.SecurityUser;
 import org.springframework.stereotype.Repository;
 
 /**

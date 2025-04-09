@@ -1,8 +1,13 @@
 package org.example.vue3manager.common.exception.handler;
 
+import java.util.List;
+import java.util.Map;
 import org.example.vue3manager.common.exception.AuthException;
 import org.example.vue3manager.common.response.Response;
 import org.example.vue3manager.common.response.ResponseCode;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,8 +31,18 @@ public class GlobalExceptionHandler {
    */
   @ResponseBody
   @ExceptionHandler(AuthException.class)
-  public final Response handleAuthException(AuthException ex) {
+  public Response handleAuthException(AuthException ex) {
     return Response.fail().code(ResponseCode.UNAUTHORIZED)
         .msg(ex.getMessage());
+  }
+
+  /**
+   * 处理参数验证异常
+   */
+  @ResponseBody
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public Response handleValidationExceptions(MethodArgumentNotValidException ex) {
+    List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
+    return Response.fail().code(ResponseCode.BAD_REQUEST).msg(allErrors.getFirst().getDefaultMessage());
   }
 }

@@ -4,7 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@MapperScan("org.example.vue3manager.dao.mapper")
+@MapperScan("org.example.vue3manager.dao.security.mapper")
 @SpringBootApplication
 public class Vue3ManagerApplication {
 

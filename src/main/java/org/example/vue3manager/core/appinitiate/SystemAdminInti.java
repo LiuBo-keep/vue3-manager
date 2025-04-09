@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.example.vue3manager.dao.SecurityUserDao;
-import org.example.vue3manager.dao.model.SecurityUser;
+import org.example.vue3manager.dao.security.SecurityUserDao;
+import org.example.vue3manager.dao.security.model.SecurityUser;
 import org.springframework.stereotype.Component;
 
 @Slf4j

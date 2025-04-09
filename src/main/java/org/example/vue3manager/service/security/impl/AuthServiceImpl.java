@@ -1,7 +1,6 @@
-package org.example.vue3manager.service.impl;
+package org.example.vue3manager.service.security.impl;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,12 +9,12 @@ import org.example.vue3manager.core.auth.constant.AuthType;
 import org.example.vue3manager.common.exception.AuthException;
 import org.example.vue3manager.core.auth.jwttoken.JwtToken;
 import org.example.vue3manager.core.auth.jwttoken.JwtTokenManager;
-import org.example.vue3manager.dao.SecurityKeyDao;
-import org.example.vue3manager.dao.SecurityUserDao;
-import org.example.vue3manager.dao.model.SecurityUser;
-import org.example.vue3manager.metadata.AuthRequest;
-import org.example.vue3manager.metadata.AuthResponse;
-import org.example.vue3manager.service.AuthService;
+import org.example.vue3manager.dao.security.SecurityKeyDao;
+import org.example.vue3manager.dao.security.SecurityUserDao;
+import org.example.vue3manager.dao.security.model.SecurityUser;
+import org.example.vue3manager.metadata.security.AuthRequest;
+import org.example.vue3manager.metadata.security.AuthResponse;
+import org.example.vue3manager.service.security.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

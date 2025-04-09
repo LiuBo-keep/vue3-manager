@@ -1,8 +1,8 @@
-package org.example.vue3manager.service;
+package org.example.vue3manager.service.security;
 
 import org.example.vue3manager.common.exception.AuthException;
-import org.example.vue3manager.metadata.AuthRequest;
-import org.example.vue3manager.metadata.AuthResponse;
+import org.example.vue3manager.metadata.security.AuthRequest;
+import org.example.vue3manager.metadata.security.AuthResponse;
 
 /**
  * 认证服务接口

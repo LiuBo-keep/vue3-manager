@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.vue3manager.dao.SecurityKeyDao;
-import org.example.vue3manager.dao.model.SecurityKey;
+import org.example.vue3manager.dao.security.SecurityKeyDao;
+import org.example.vue3manager.dao.security.model.SecurityKey;
 import org.example.vue3manager.utils.AesEncryptorUtils;
 import org.example.vue3manager.utils.RSAKeyUtil;
 import org.springframework.stereotype.Component;

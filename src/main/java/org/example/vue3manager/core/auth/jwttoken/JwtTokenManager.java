@@ -16,7 +16,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.example.vue3manager.core.auth.constant.AuthFlag;
-import org.example.vue3manager.dao.SecurityKeyDao;
+import org.example.vue3manager.dao.security.SecurityKeyDao;
 import org.example.vue3manager.utils.AesEncryptorUtils;
 import org.example.vue3manager.utils.MD5Util;
 import org.example.vue3manager.utils.RSAKeyUtil;

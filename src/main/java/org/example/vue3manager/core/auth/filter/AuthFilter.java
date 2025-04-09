@@ -8,7 +8,7 @@ import org.example.vue3manager.core.auth.constant.AuthType;
 import org.example.vue3manager.core.auth.context.SecurityIdentity;
 import org.example.vue3manager.core.auth.jwttoken.JwtToken;
 import org.example.vue3manager.core.auth.jwttoken.JwtTokenManager;
-import org.example.vue3manager.dao.SecurityKeyDao;
+import org.example.vue3manager.dao.security.SecurityKeyDao;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

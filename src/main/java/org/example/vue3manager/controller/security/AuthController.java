@@ -1,10 +1,10 @@
-package org.example.vue3manager.controller;
+package org.example.vue3manager.controller.security;
 
 import org.example.vue3manager.common.exception.AuthException;
 import org.example.vue3manager.common.response.Response;
-import org.example.vue3manager.metadata.AuthRequest;
-import org.example.vue3manager.metadata.AuthResponse;
-import org.example.vue3manager.service.AuthService;
+import org.example.vue3manager.metadata.security.AuthRequest;
+import org.example.vue3manager.metadata.security.AuthResponse;
+import org.example.vue3manager.service.security.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
