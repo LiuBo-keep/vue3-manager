@@ -40,7 +40,8 @@ public class SystemKeyInit implements SystemInit {
 
             securityKey = new SecurityKey();
             securityKey.setId(UUID.randomUUID().toString());
-            securityKey.setAesKey(Base64.getEncoder().encodeToString(bytes));
+            securityKey.setAccessTokenKey(Base64.getEncoder().encodeToString(bytes));
+            securityKey.setRefreshTokenKey(Base64.getEncoder().encodeToString(bytes));
             securityKey.setPublicKey(aesEncryptorUtils.encrypt(publicKey));
             securityKey.setPrivateKey(aesEncryptorUtils.encrypt(privateKey));
             securityKey.setCreateBy("System");

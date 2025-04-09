@@ -30,9 +30,14 @@ public class SecurityKey {
   private String privateKey;
 
   /**
-   * ase密钥
+   * 访问token密钥
    */
-  private String aesKey;
+  private String accessTokenKey;
+
+  /**
+   * 刷新token密钥
+   */
+  private String refreshTokenKey;
 
   /**
    * 创建时间，记录密钥对何时被创建
