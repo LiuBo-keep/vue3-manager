@@ -16,40 +16,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemKeyInit implements SystemInit {
 
-    private final SecurityKeyDao securityKeyDao;
+  private final SecurityKeyDao securityKeyDao;
 
-    public SystemKeyInit(SecurityKeyDao securityKeyDao) {
-        this.securityKeyDao = securityKeyDao;
+  public SystemKeyInit(SecurityKeyDao securityKeyDao) {
+    this.securityKeyDao = securityKeyDao;
+  }
+
+  @Override
+  public void init() {
+    try {
+      SecurityKey securityKey = securityKeyDao.findKey();
+      if (Objects.nonNull(securityKey)) {
+        return;
+      }
+
+      byte[] bytes = AesEncryptorUtils.generateSecureAesKey();
+      AesEncryptorUtils aesEncryptorUtils = new AesEncryptorUtils(bytes);
+
+
+      RSAKeyUtil rsaKeyUtil = new RSAKeyUtil();
+      String publicKey = rsaKeyUtil.getPublicKey();
+      String privateKey = rsaKeyUtil.getPrivateKey();
+
+      securityKey = new SecurityKey();
+      securityKey.setId(UUID.randomUUID().toString());
+      securityKey.setAccessTokenKey(Base64.getEncoder().encodeToString(AesEncryptorUtils.generateSecureAesKey()));
+      securityKey.setRefreshTokenKey(Base64.getEncoder().encodeToString(AesEncryptorUtils.generateSecureAesKey()));
+      securityKey.setAesKey(Base64.getEncoder().encodeToString(bytes));
+      securityKey.setPublicKey(aesEncryptorUtils.encrypt(publicKey));
+      securityKey.setPrivateKey(aesEncryptorUtils.encrypt(privateKey));
+      securityKey.setCreateBy("System");
+      securityKey.setCreateTime(LocalDateTime.now());
+
+      securityKeyDao.insert(securityKey);
+    } catch (Exception e) {
+      log.error("SystemKeyInit error", e);
     }
-
-    @Override
-    public void init() {
-        try {
-            SecurityKey securityKey = securityKeyDao.findKey();
-            if (Objects.nonNull(securityKey)) {
-                return;
-            }
-
-            byte[] bytes = AesEncryptorUtils.generateSecureAesKey();
-            AesEncryptorUtils aesEncryptorUtils = new AesEncryptorUtils(bytes);
-
-
-            RSAKeyUtil rsaKeyUtil = new RSAKeyUtil();
-            String publicKey = rsaKeyUtil.getPublicKey();
-            String privateKey = rsaKeyUtil.getPrivateKey();
-
-            securityKey = new SecurityKey();
-            securityKey.setId(UUID.randomUUID().toString());
-            securityKey.setAccessTokenKey(Base64.getEncoder().encodeToString(bytes));
-            securityKey.setRefreshTokenKey(Base64.getEncoder().encodeToString(bytes));
-            securityKey.setPublicKey(aesEncryptorUtils.encrypt(publicKey));
-            securityKey.setPrivateKey(aesEncryptorUtils.encrypt(privateKey));
-            securityKey.setCreateBy("System");
-            securityKey.setCreateTime(LocalDateTime.now());
-
-            securityKeyDao.insert(securityKey);
-        } catch (Exception e) {
-            log.error("SystemKeyInit error", e);
-        }
-    }
+  }
 }

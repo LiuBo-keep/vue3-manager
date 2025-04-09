@@ -79,5 +79,9 @@ public class SecurityKeyDao {
   public String findRefreshTokenKey() {
     return securityKeyMapper.findRefreshTokenKey();
   }
+
+  public String findAesKey() {
+    return securityKeyMapper.findAesKey();
+  }
 }
 

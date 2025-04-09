@@ -25,5 +25,5 @@ public class AuthRequest {
      */
     private String password;
 
-    private String refresh_token;
+    private String refreshToken;
 }

@@ -75,18 +75,18 @@ public class AuthServiceImpl implements AuthService {
   }
 
   private AuthResponse validateRefreshTokenAuth(AuthRequest authRequest) throws AuthException {
-    if (StringUtils.isBlank(authRequest.getRefresh_token())) {
+    if (StringUtils.isBlank(authRequest.getRefreshToken())) {
       throw new AuthException("刷新令牌不能为空!");
     }
 
     // 验证token
     String refreshTokenKey = securityKeyDao.findRefreshTokenKey();
-    if (!jwtTokenManager.validateToken(authRequest.getRefresh_token(), refreshTokenKey)) {
+    if (!jwtTokenManager.validateToken(authRequest.getRefreshToken(), refreshTokenKey)) {
       logger.info("无效的刷新令牌");
       throw new AuthException("无效的刷新令牌!");
     }
 
-    JwtToken jwtToken = jwtTokenManager.parseToken(authRequest.getRefresh_token());
+    JwtToken jwtToken = jwtTokenManager.parseToken(authRequest.getRefreshToken());
     String userName = jwtToken.getSubject();
     if (userName == null) {
       logger.info("无效的刷新令牌");

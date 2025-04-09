@@ -22,9 +22,9 @@ public interface SecurityKeyMapper {
    * @param securityKey 要插入的安全密钥对象，包含密钥对的所有必要信息
    */
   @Insert(
-      "insert into security_key(id,public_key, private_key, access_token_key,refresh_token_key,create_time, createby, update_time, updateby) "
+      "insert into security_key(id,public_key, private_key, access_token_key,refresh_token_key,aes_key,create_time, createby, update_time, updateby) "
           + "values(#{securityKey.id},#{securityKey.publicKey}, #{securityKey.privateKey}, #{securityKey.accessTokenKey},"
-          + " #{securityKey.refreshTokenKey},#{securityKey.createTime}, #{securityKey.createBy},  #{securityKey.updateTime}," +
+          + " #{securityKey.refreshTokenKey},#{securityKey.aesKey},#{securityKey.createTime}, #{securityKey.createBy},  #{securityKey.updateTime}," +
           " #{securityKey.updateBy})")
   void insert(@Param("securityKey") SecurityKey securityKey);
 
@@ -34,7 +34,7 @@ public interface SecurityKeyMapper {
    *
    * @return 返回找到的安全密钥对象，如果没有找到则返回null
    */
-  @Select("select id,public_key, private_key,access_token_key,refresh_token_key, create_time,refresh_token_key,"
+  @Select("select id,public_key, private_key,access_token_key,refresh_token_key,aes_key, create_time,refresh_token_key,"
       + " createby, update_time, updateby from security_key")
   SecurityKey findKey();
 
@@ -65,5 +65,8 @@ public interface SecurityKeyMapper {
 
   @Select("select refresh_token_key from security_key")
   String findRefreshTokenKey();
+
+  @Select("select aes_key from security_key")
+  String findAesKey();
 }
 

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.nio.charset.StandardCharsets;
 import java.security.*;
@@ -19,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.example.vue3manager.core.auth.constant.AuthFlag;
 import org.example.vue3manager.dao.SecurityKeyDao;
 import org.example.vue3manager.utils.AesEncryptorUtils;
+import org.example.vue3manager.utils.MD5Util;
 import org.example.vue3manager.utils.RSAKeyUtil;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenManager {
 
+  private static final String ID = "vue3-manager";
   /**
    * 令牌的发行者，通常是应用的名称
    */
@@ -88,11 +89,12 @@ public class JwtTokenManager {
     Date expiration = new Date(now.getTime() + expirationSeconds * 1000);
 
     return Jwts.builder()
-        .setSubject(subject)
-        .setIssuer(ISSUER)
-        .setIssuedAt(now)
-        .setExpiration(expiration)
-        .signWith(getPrivateKey(salt), SignatureAlgorithm.RS256)
+        .subject(subject)
+        .issuer(ISSUER)
+        .issuedAt(now)
+        .id(MD5Util.md5WithSalt(ID, salt))
+        .expiration(expiration)
+        .signWith(getPrivateKey(), Jwts.SIG.RS256)
         .compact();
   }
 
@@ -103,11 +105,11 @@ public class JwtTokenManager {
    * @param token JWT 令牌字符串
    */
   public boolean validateToken(String token, String salt) {
-
     try {
       // 验证 token 和解析 claims
       Jwts.parser()
-          .setSigningKey(getPublicKey(salt))
+          .requireId(MD5Util.md5WithSalt(ID, salt))
+          .verifyWith(getPublicKey())
           .build()
           .parseSignedClaims(token)
           .getPayload();
@@ -124,9 +126,10 @@ public class JwtTokenManager {
    *
    * @return 解密后的私钥对象
    */
-  private PrivateKey getPrivateKey(String salt) {
+  private PrivateKey getPrivateKey() {
     String privateKey = securityKeyDao.findPrivateKey();
-    AesEncryptorUtils aesEncryptor = new AesEncryptorUtils(Base64.getDecoder().decode(salt));
+    String aesKey = securityKeyDao.findAesKey();
+    AesEncryptorUtils aesEncryptor = new AesEncryptorUtils(Base64.getDecoder().decode(aesKey));
     String decrypt = aesEncryptor.decrypt(privateKey);
     return RSAKeyUtil.decodePrivateKey(decrypt);
   }
@@ -136,9 +139,10 @@ public class JwtTokenManager {
    *
    * @return 解密后的公钥对象
    */
-  private PublicKey getPublicKey(String salt) {
+  private PublicKey getPublicKey() {
     String encryptedPublicKey = securityKeyDao.findPublicKey();
-    AesEncryptorUtils aesEncryptor = new AesEncryptorUtils(Base64.getDecoder().decode(salt));
+    String aesKey = securityKeyDao.findAesKey();
+    AesEncryptorUtils aesEncryptor = new AesEncryptorUtils(Base64.getDecoder().decode(aesKey));
     String publicKeyStr = aesEncryptor.decrypt(encryptedPublicKey);
     return RSAKeyUtil.decodePublicKey(publicKeyStr);
   }

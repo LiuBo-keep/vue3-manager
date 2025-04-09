@@ -15,6 +15,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthFilter implements HandlerInterceptor {
 
+  private static final String RELEASE_PATH = "/auth/token";
+
   private final SecurityKeyDao securityKeyDao;
   private final JwtTokenManager jwtTokenManager;
   private final SecurityIdentity securityIdentity;
@@ -27,6 +29,11 @@ public class AuthFilter implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    // 放行登录接口
+    if (request.getRequestURI().contains(RELEASE_PATH)) {
+      return true;
+    }
+
     String authHeader = request.getHeader(AuthFlag.authHeader);
 
     if (authHeader == null || !authHeader.startsWith(AuthType.BEARER.getType())) {
