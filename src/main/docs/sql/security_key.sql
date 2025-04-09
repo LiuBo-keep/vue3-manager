@@ -11,7 +11,7 @@
  Target Server Version : 50643 (5.6.43)
  File Encoding         : 65001
 
- Date: 09/04/2025 11:49:29
+ Date: 09/04/2025 14:24:22
 */
 
 SET NAMES utf8mb4;
@@ -27,6 +27,7 @@ CREATE TABLE `security_key`  (
   `private_key` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '私钥',
   `access_token_key` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '访问token密钥',
   `refresh_token_key` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '刷新token密钥',
+  `aes_key` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'aes密钥',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `createby` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
