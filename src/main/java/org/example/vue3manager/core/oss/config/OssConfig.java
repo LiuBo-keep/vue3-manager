@@ -36,6 +36,56 @@ public class OssConfig {
   private Minio minio;
 
   /**
+   * AliCloud配置，当选择AliCloud作为OSS时使用
+   */
+  private AliCloud aliCloud;
+
+  /**
+   * AliCloudOss类用于封装阿里云OSS（对象存储服务）的相关配置信息
+   * 该类提供了关于是否启用STS（Security Token Service）临时安全令牌服务、
+   * OSS服务的接入点、访问凭证以及存储桶的名称等属性
+   */
+  @Data
+  public static class AliCloud {
+
+    /**
+     * stsEnable用于指示是否启用STS临时安全令牌服务
+     * 当设置为true时，表示将使用STS提供的临时访问凭证访问OSS服务
+     */
+    private boolean stsEnable = false;
+
+    /**
+     * stsEndpoint定义了STS服务的接入点URL
+     * 该URL用于获取临时访问凭证
+     */
+    private String stsEndpoint;
+
+    /**
+     * endpoint表示OSS服务的接入点URL
+     * 该URL用于访问OSS服务，进行对象的上传、下载等操作
+     */
+    private String endpoint;
+
+    /**
+     * accessKeyId是访问OSS服务所需的密钥ID
+     * 它与accessKeySecret一起使用，用于验证用户的身份
+     */
+    private String accessKeyId;
+
+    /**
+     * accessKeySecret是访问OSS服务所需的密钥密钥部分
+     * 它与accessKeyId一起使用，用于验证用户的身份
+     */
+    private String accessKeySecret;
+
+    /**
+     * bucketName是用户在OSS服务上创建的存储桶的名称
+     * 所有的对象都必须位于某个存储桶中
+     */
+    private String bucketName;
+  }
+
+  /**
    * Minio类是OssConfig的嵌套类，用于配置MinIO对象存储服务的相关参数
    * 它同样使用了Lombok的@Data注解
    */
