@@ -22,6 +22,14 @@ public abstract class AbstractOssPlatform implements OssPlatform, OssPlatformAda
       fileName = generateFileName();
     }
 
+    if (StringUtils.isNoneBlank(fileType)) {
+      if (fileType.startsWith(".")) {
+        fileName = fileName + fileType;
+      } else {
+        fileName = fileType + "." + fileName;
+      }
+    }
+
     OssContext ossContext = new OssContext();
     if (!StringUtils.endsWith(basePath, File.separator)) {
       basePath = basePath + File.separator;

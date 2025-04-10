@@ -72,6 +72,6 @@ public class OssConfig {
     /**
      * 本地磁盘上用于存储文件的基础路径
      */
-    private String basePath;
+    private String rootPath;
   }
 }

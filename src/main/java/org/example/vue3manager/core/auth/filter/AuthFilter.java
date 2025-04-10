@@ -3,6 +3,7 @@ package org.example.vue3manager.core.auth.filter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.vue3manager.common.exception.AuthException;
+import org.example.vue3manager.core.auth.annotation.Authenticated;
 import org.example.vue3manager.core.auth.constant.AuthFlag;
 import org.example.vue3manager.core.auth.constant.AuthType;
 import org.example.vue3manager.core.auth.context.SecurityIdentity;
@@ -10,12 +11,11 @@ import org.example.vue3manager.core.auth.jwttoken.JwtToken;
 import org.example.vue3manager.core.auth.jwttoken.JwtTokenManager;
 import org.example.vue3manager.dao.security.SecurityKeyDao;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class AuthFilter implements HandlerInterceptor {
-
-  private static final String RELEASE_PATH = "/auth/token";
 
   private final SecurityKeyDao securityKeyDao;
   private final JwtTokenManager jwtTokenManager;
@@ -29,9 +29,12 @@ public class AuthFilter implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    // 放行登录接口
-    if (request.getRequestURI().contains(RELEASE_PATH)) {
-      return true;
+    if (handler instanceof HandlerMethod handlerMethod) {
+      Class<?> declaringClass = handlerMethod.getMethod().getDeclaringClass();
+      Authenticated annotation = declaringClass.getAnnotation(Authenticated.class);
+      if (annotation == null){
+        return true;
+      }
     }
 
     String authHeader = request.getHeader(AuthFlag.authHeader);

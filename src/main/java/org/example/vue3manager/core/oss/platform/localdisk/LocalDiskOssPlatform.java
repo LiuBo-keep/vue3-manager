@@ -7,7 +7,9 @@ import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.example.vue3manager.common.exception.OssOperateException;
+import org.example.vue3manager.core.oss.config.OssConfig;
 import org.example.vue3manager.core.oss.config.OssPlatformType;
 import org.example.vue3manager.core.oss.context.OssContext;
 import org.example.vue3manager.core.oss.platform.AbstractOssPlatform;
@@ -16,10 +18,29 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class LocalDiskOssPlatform extends AbstractOssPlatform {
+
+  private final OssConfig ossConfig;
+
+  public LocalDiskOssPlatform(OssConfig ossConfig) {
+    this.ossConfig = ossConfig;
+  }
+
   @Override
   protected String uploadFile(OssContext ossContext) throws OssOperateException {
+    OssConfig.LocalDisk localDisk = ossConfig.getLocalDisk();
+    if (StringUtils.isBlank(localDisk.getRootPath())) {
+      throw new OssOperateException("LocalDisk basePath is null");
+    }
+
+    String rootPath = localDisk.getRootPath();
     String filePath = ossContext.getFilePath();
     String fileName = ossContext.getFileName();
+
+    if (rootPath.endsWith(File.separator)) {
+      filePath = rootPath + filePath;
+    } else {
+      filePath = rootPath + File.separator + filePath;
+    }
 
     // 文件目录
     File file = new File(filePath);
@@ -77,7 +98,7 @@ public class LocalDiskOssPlatform extends AbstractOssPlatform {
           "File was created. But write data error.file path: "
               + filePath + " Message: " + e.getMessage());
     }
-    return filePath + fileName;
+    return ossContext.getFilePath() + ossContext.getFileName();
   }
 
   @Override

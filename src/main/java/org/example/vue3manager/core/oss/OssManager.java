@@ -4,8 +4,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.example.vue3manager.common.exception.OssOperateException;
 import org.example.vue3manager.core.oss.config.OssConfig;
+import org.example.vue3manager.core.oss.helper.FileInfoHelper;
 import org.example.vue3manager.core.oss.platform.AbstractOssPlatform;
-import org.example.vue3manager.core.oss.utils.FileUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public final class OssManager implements OssOperate, ApplicationContextAware {
 
   private OssConfig ossConfig;
+  private FileInfoHelper fileInfoHelper;
   private Map<String, AbstractOssPlatform> ossPlatform;
 
 
@@ -41,12 +42,7 @@ public final class OssManager implements OssOperate, ApplicationContextAware {
     }
 
     if (StringUtils.isBlank(fileType)) {
-      if (StringUtils.isNoneBlank(fileName)) {
-        fileType = FileUtils.getFileTypeFromFileName(fileName);
-        if ("unknown".equalsIgnoreCase(fileType)) {
-          fileType = FileUtils.getFileTypeFromFileName(data);
-        }
-      }
+      fileType = fileInfoHelper.getFileType(data);
     }
 
     for (AbstractOssPlatform ossPlatform : ossPlatform.values()) {
@@ -91,6 +87,7 @@ public final class OssManager implements OssOperate, ApplicationContextAware {
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     this.ossConfig = applicationContext.getBean(OssConfig.class);
+    this.fileInfoHelper = applicationContext.getBean(FileInfoHelper.class);
     this.ossPlatform = applicationContext.getBeansOfType(AbstractOssPlatform.class);
   }
 }

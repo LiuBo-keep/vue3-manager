@@ -2,6 +2,7 @@ package org.example.vue3manager.controller.security;
 
 import jakarta.validation.Valid;
 import org.example.vue3manager.common.response.Response;
+import org.example.vue3manager.core.auth.annotation.Authenticated;
 import org.example.vue3manager.metadata.security.FindCurrentLoginUserInfoResponse;
 import org.example.vue3manager.metadata.security.UserCreateRequest;
 import org.example.vue3manager.service.security.UserService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Authenticated
 @RestController
 @RequestMapping("/user")
 public class UserController {

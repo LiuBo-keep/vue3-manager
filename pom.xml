@@ -20,6 +20,7 @@
         <jjwt.version>0.12.3</jjwt.version>
         <minio.version>8.5.6</minio.version>
         <lombok.version>1.18.34</lombok.version>
+        <tika-core.version>2.9.1</tika-core.version>
         <commons-io.version>2.16.1</commons-io.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -69,6 +70,13 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>${tika-core.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.minio/minio -->
