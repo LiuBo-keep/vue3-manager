@@ -34,6 +34,18 @@ public class SecurityUser {
   private String password;
 
   /**
+   * 密码过期时间
+   * 用于记录密码的过期时间
+   */
+  private LocalDateTime passwordExpirationTime;
+
+  /**
+   * 临时密码
+   * 用于记录用户是否使用了临时密码
+   */
+  private Boolean temporaryPassword;
+
+  /**
    * 用户联系电话
    * 用于联系用户
    */
@@ -44,6 +56,24 @@ public class SecurityUser {
    * 用于用户注册、找回密码等
    */
   private String email;
+
+  /**
+   * 用户类型
+   * 用于区分普通用户和管理员等用户类型
+   */
+  private String userType;
+
+  /**
+   * 用户状态
+   * 用于表示用户账户是否被禁用、锁定等
+   */
+  private String status;
+
+  /**
+   * 用户头像路径
+   * 用于显示用户的头像
+   */
+  private String avatarPath;
 
   /**
    * 用户创建时间

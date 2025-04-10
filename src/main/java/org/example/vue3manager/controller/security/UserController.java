@@ -5,6 +5,7 @@ import org.example.vue3manager.common.response.Response;
 import org.example.vue3manager.core.auth.annotation.Authenticated;
 import org.example.vue3manager.metadata.security.FindCurrentLoginUserInfoResponse;
 import org.example.vue3manager.metadata.security.UserCreateRequest;
+import org.example.vue3manager.metadata.security.UserUpdateRequest;
 import org.example.vue3manager.service.security.UserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +33,7 @@ public class UserController {
     return Response.ok().entry(currentLoginUserInfo).build();
   }
 
-  @GetMapping()
+  @GetMapping("/page")
   public Response getUser() {
     return Response.ok().build();
   }
@@ -42,18 +43,22 @@ public class UserController {
     return Response.ok().build();
   }
 
-  @PostMapping("")
-  public Response createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
+  @PostMapping()
+  public Response createUser(
+      @Valid @RequestBody UserCreateRequest userCreateRequest) {
     return Response.ok().build();
   }
 
-  @PutMapping()
-  public Response updateUser() {
+  @PutMapping("/{id}")
+  public Response updateUser(
+      @PathVariable("id") String id,
+      @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
     return Response.ok().build();
   }
 
-  @DeleteMapping
-  public Response deleteUser() {
+  @DeleteMapping("/{id}")
+  public Response deleteUser(
+      @PathVariable("id") String id) {
     return Response.ok().build();
   }
 }

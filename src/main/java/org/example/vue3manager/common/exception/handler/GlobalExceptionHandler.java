@@ -3,6 +3,7 @@ package org.example.vue3manager.common.exception.handler;
 import java.util.List;
 import java.util.Map;
 import org.example.vue3manager.common.exception.AuthException;
+import org.example.vue3manager.common.exception.BusinessException;
 import org.example.vue3manager.common.response.Response;
 import org.example.vue3manager.common.response.ResponseCode;
 import org.springframework.validation.FieldError;
@@ -33,6 +34,20 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(AuthException.class)
   public Response handleAuthException(AuthException ex) {
     return Response.fail().code(ResponseCode.UNAUTHORIZED)
+        .msg(ex.getMessage());
+  }
+
+  /**
+   * 处理业务异常
+   * 当控制器方法抛出业务异常时，此方法将捕获并处理它
+   *
+   * @param ex 业务异常对象
+   * @return 响应对象，包含错误代码和异常消息
+   */
+  @ResponseBody
+  @ExceptionHandler(BusinessException.class)
+  public Response handleAuthException(BusinessException ex) {
+    return Response.fail().code(ResponseCode.BAD_REQUEST)
         .msg(ex.getMessage());
   }
 

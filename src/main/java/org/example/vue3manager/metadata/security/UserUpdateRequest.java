@@ -5,14 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
-/**
- * 用户创建请求类
- * 用于封装用户创建时的相关信息
- *
- * @author aidan.liu
- */
 @Data
-public class UserCreateRequest {
+public class UserUpdateRequest {
 
   /**
    * 用户名
@@ -31,12 +25,6 @@ public class UserCreateRequest {
   private String password;
 
   /**
-   * 用户类型
-   * 可选字段，默认为普通用户
-   */
-  private String userType;
-
-  /**
    * 用户邮箱
    * 可选字段，用于用户的联系和信息通知
    */
@@ -46,7 +34,7 @@ public class UserCreateRequest {
    * 用户电话号码
    * 可选字段，用于用户的联系和信息通知
    */
-  @Max(value = 11, message = "手机号码长度必须是11位")
+  @Max(value = 11,message = "手机号码长度必须是11位")
   private String phone;
 
   /**

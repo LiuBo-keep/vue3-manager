@@ -98,7 +98,13 @@ public class LocalDiskOssPlatform extends AbstractOssPlatform {
           "File was created. But write data error.file path: "
               + filePath + " Message: " + e.getMessage());
     }
-    return ossContext.getFilePath() + ossContext.getFileName();
+
+    // 返回文件路径
+    if (ossConfig.getResultPathType().equals(OssConfig.ResultPathType.RELATIVE)) {
+      return ossContext.getFilePath() + ossContext.getFileName();
+    } else {
+      return filePath;
+    }
   }
 
   @Override

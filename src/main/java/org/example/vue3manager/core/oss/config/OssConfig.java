@@ -26,6 +26,12 @@ public class OssConfig {
   private OssPlatformType platformType;
 
   /**
+   * 结果路径类型，用于指定上传文件后返回的路径类型
+   * 它可以是"absolute"（绝对路径）或"relative"（相对路径）
+   */
+  private ResultPathType resultPathType = ResultPathType.ABSOLUTE;
+
+  /**
    * 本地磁盘配置，当选择本地磁盘作为OSS时使用
    */
   private LocalDisk localDisk;
@@ -123,5 +129,23 @@ public class OssConfig {
      * 本地磁盘上用于存储文件的基础路径
      */
     private String rootPath;
+  }
+
+  /**
+   * 枚举类型，用于定义结果路径的类型
+   * 包含两种类型：ABSOLUTE（绝对路径）和RELATIVE（相对路径）
+   * 适用于需要明确路径类型的场景，以确保路径的解析正确性
+   */
+  public enum ResultPathType {
+
+    /**
+     * 绝对路径类型
+     */
+    ABSOLUTE,
+
+    /**
+     * 相对路径类型
+     */
+    RELATIVE
   }
 }
