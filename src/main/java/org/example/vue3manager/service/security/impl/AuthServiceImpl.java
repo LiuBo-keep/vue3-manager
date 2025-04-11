@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public AuthResponse auth(AuthRequest authRequest) throws AuthException {
-    String grantType = authRequest.getGrant_type();
+    String grantType = authRequest.getGrantType();
     if (grantType == null) {
       throw new AuthException("授权类型不能为空!");
     }

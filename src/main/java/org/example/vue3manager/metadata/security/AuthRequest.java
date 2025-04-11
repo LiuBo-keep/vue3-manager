@@ -15,7 +15,7 @@ public class AuthRequest {
    * refresh_token : 刷新令牌
    * client_credentials : 客户端凭证模式
    */
-  private String grant_type;
+  private String grantType;
 
   /**
    * 用户名，用于身份验证。
